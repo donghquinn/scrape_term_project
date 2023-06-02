@@ -10,12 +10,10 @@
     "build": "NODE_ENV=production tsc --project tsconfig.json --diagnostics  -p tsconfig.json",
     "dev:naver": "nodemon --exec node -r  ts-node/register -r dotenv/config --loader ts-paths-esm-loader --experimental-specifier-resolution=node ./src/libraries/scrape/naver.kin.ts",
     "schema": "prisma generate",
-    "migrate": "prisma migrate dev --name added_melon",
+    "migrate": "prisma migrate dev --name term",
     "db:update": "prisma db push"
   },
   "devDependencies": {
-    "@types/moment": "^2.13.0",
-    "@types/moment-timezone": "^0.5.30",
     "@types/node": "^18.16.0",
     "@types/node-schedule": "^2.1.0",
     "@types/utf8": "^3.0.1",
@@ -38,7 +36,6 @@
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.1.3",
-    "moment": "^2.29.4",
     "nodemon": "^2.0.22",
     "prisma": "^4.15.0",
     "set-interval-async": "^3.0.3",
