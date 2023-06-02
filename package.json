@@ -8,6 +8,7 @@
   "scripts": {
     "start": "NODE_ENV=production node --max-old-space-size=700 -r ts-node/register -r dotenv/config --loader ts-paths-esm-loader --experimental-specifier-resolution=node  ./src/start.ts",
     "build": "NODE_ENV=production tsc --project tsconfig.json --diagnostics  -p tsconfig.json",
+    "dev": "NODE_ENV=development nodemon --exec node  --max-old-space-size=700 -r ts-node/register -r dotenv/config --loader ts-paths-esm-loader --experimental-specifier-resolution=node  ./src/start.ts",
     "dev:naver": "nodemon --exec node -r  ts-node/register -r dotenv/config --loader ts-paths-esm-loader --experimental-specifier-resolution=node ./src/libraries/scrape/naver.kin.ts",
     "schema": "prisma generate",
     "migrate": "prisma migrate dev --name term",
@@ -22,6 +23,8 @@
     "eslint": "^8.39.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
+        "@types/set-interval-async": "^1.0.0",
+
     "eslint-config-next": "^13.2.4",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-import": "^2.26.0",

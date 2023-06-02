@@ -28,7 +28,7 @@ export class ScrapeManager {
       try {
         await scrapeNaverKin();
       } catch (error) {
-        Logger.error('Scrape Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
+        Logger.error('Scrape Error: %o', { error });
       }
     }, this.time);
   }
