@@ -10,6 +10,7 @@ services:
       - ./logs:/home/node/logs
     expose:
       - 5342
+    restart: unless-stopped
     networks:
       - proxy
       
