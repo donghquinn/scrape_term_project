@@ -63,6 +63,7 @@ export const scrapeNaverKin = async () => {
       ScrapeLogger.info(`Created Data finished: %o`, { title: titleArray[a] });
     }
 
+    ScrapeLogger.info('Finished');
     return { hrefArray, titleArray, categoryArray };
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
