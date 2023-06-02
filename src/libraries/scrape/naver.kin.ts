@@ -3,6 +3,7 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { NaverError } from 'errors/naver.error';
 import { ScrapeLogger } from 'utils/logger.util';
+import fs from 'fs';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -62,6 +63,13 @@ export const scrapeNaverKin = async () => {
 
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
       ScrapeLogger.info('Insert Data into DB');
+      const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
+
+      fs.writeFile(Date.now() + '../../data/file.txt', datas, (error) => {
+        ScrapeLogger.error('Failed to Save data into txt');
+      });
+
+      ScrapeLogger.info('Created TXT file');
 
       await prisma.naverKin.create({
         data: {
