@@ -1,5 +1,6 @@
 import { scrapeNaverKin } from 'libraries/scrape/naver.kin';
 import { setIntervalAsync } from 'set-interval-async';
+import { Logger } from 'utils/logger.util';
 
 export class ScrapeManager {
   private static instance: ScrapeManager;
@@ -14,7 +15,11 @@ export class ScrapeManager {
 
   public start() {
     setIntervalAsync(async () => {
-      await scrapeNaverKin();
+      try {
+        await scrapeNaverKin();
+      } catch (error) {
+        Logger.error('Scrape Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
+      }
     }, 60000);
   }
 }

@@ -55,7 +55,7 @@ export const scrapeNaverKin = async () => {
         data: {
           title: titleArray[a],
           content: contentArray[a],
-          category: contentArray[a],
+          category: categoryArray[a],
           link: hrefArray[a],
         },
       });
