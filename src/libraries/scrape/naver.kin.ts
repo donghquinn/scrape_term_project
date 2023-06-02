@@ -4,6 +4,7 @@ import { load } from 'cheerio';
 import { NaverError } from 'errors/naver.error';
 import { ScrapeLogger } from 'utils/logger.util';
 import fs from 'fs';
+import { saveAsCSV } from 'libraries/csv.lib';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -68,8 +69,10 @@ export const scrapeNaverKin = async () => {
       fs.writeFile(Date.now() + '../../data/file.txt', datas, (error) => {
         ScrapeLogger.error('Failed to Save data into txt');
       });
-
       ScrapeLogger.info('Created TXT file');
+      saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
+
+      ScrapeLogger.info('Created CSV file');
 
       await prisma.naverKin.create({
         data: {
