@@ -16,7 +16,7 @@ services:
   db:
     image: postgres:15-alpine3.17
     ports:
-      - 10432:5432
+      - 6632:5432
     restart: always
     container_name: termdb
     env_file:
