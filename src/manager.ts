@@ -10,6 +10,7 @@ export class ScrapeManager {
   constructor() {
     this.time = Number(process.env.INTERVAL!);
   }
+
   public static getInstance() {
     if (!this.instance) {
       this.instance = new ScrapeManager();
@@ -19,9 +20,11 @@ export class ScrapeManager {
   }
 
   public start() {
-    Logger.info('Start manger');
+    Logger.info('Start manger. Interval: %o', { interval: this.time });
+
     setIntervalAsync(async () => {
       Logger.info('Start Scrape');
+
       try {
         await scrapeNaverKin();
       } catch (error) {
