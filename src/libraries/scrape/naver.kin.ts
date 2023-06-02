@@ -66,9 +66,10 @@ export const scrapeNaverKin = async () => {
       ScrapeLogger.info('Insert Data into DB');
       const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
 
-      fs.writeFile(Date.now() + '../../data/file.txt', datas, (error) => {
+      fs.writeFile('../../data' + Date.now() + '/file.txt', datas, (error) => {
         ScrapeLogger.error('Failed to Save data into txt');
       });
+
       ScrapeLogger.info('Created TXT file');
       saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
 
