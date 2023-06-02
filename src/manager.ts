@@ -5,6 +5,11 @@ import { Logger } from 'utils/logger.util';
 export class ScrapeManager {
   private static instance: ScrapeManager;
 
+  private time: number;
+
+  constructor() {
+    this.time = Number(process.env.INTERVAL!);
+  }
   public static getInstance() {
     if (!this.instance) {
       this.instance = new ScrapeManager();
@@ -22,6 +27,6 @@ export class ScrapeManager {
       } catch (error) {
         Logger.error('Scrape Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
       }
-    }, 60000);
+    }, this.time);
   }
 }
