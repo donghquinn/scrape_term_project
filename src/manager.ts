@@ -1,3 +1,5 @@
+import('./env');
+
 import { scrapeNaverKin } from 'libraries/scrape/naver.kin';
 import { setIntervalAsync } from 'set-interval-async';
 import { Logger } from 'utils/logger.util';

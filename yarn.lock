@@ -323,6 +323,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/set-interval-async@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@types/set-interval-async@npm:1.0.0"
+  checksum: 1a96001f49c77678a685df775a83644ee57ad717ca6a41ec9949249bfa2d4f02454680e81dd301cbe1285761f8196ef6b6c250da04b5b741a3ea2ddf66916c5c
+  languageName: node
+  linkType: hard
+
 "@types/triple-beam@npm:^1.3.2":
   version: 1.3.2
   resolution: "@types/triple-beam@npm:1.3.2"
@@ -4038,6 +4045,7 @@ __metadata:
     "@prisma/client": ^4.15.0
     "@types/node": ^18.16.0
     "@types/node-schedule": ^2.1.0
+    "@types/set-interval-async": ^1.0.0
     "@types/utf8": ^3.0.1
     "@typescript-eslint/eslint-plugin": ^5.59.0
     "@typescript-eslint/parser": ^5.58.0
