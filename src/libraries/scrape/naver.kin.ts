@@ -4,7 +4,7 @@ import { load } from 'cheerio';
 import { NaverError } from 'errors/naver.error';
 import fs from 'fs';
 import { saveAsCSV } from 'libraries/csv.lib';
-import { ScrapeLogger } from 'utils/logger.util';
+import { Logger, ScrapeLogger } from 'utils/logger.util';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -75,7 +75,7 @@ export const scrapeNaverKin = async () => {
 
       saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
 
-      await prisma.naverKin.create({
+      await prisma.naver.create({
         data: {
           title: titleArray[a],
           content: contentArray[a],
@@ -92,6 +92,8 @@ export const scrapeNaverKin = async () => {
     return { hrefArray, titleArray, categoryArray };
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
+
+    Logger.error(error);
 
     throw new NaverError(
       'Naver KIN Scrape',
