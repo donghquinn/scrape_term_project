@@ -2,10 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { load } from 'cheerio';
 import { NaverError } from 'errors/naver.error';
-import { ScrapeLogger } from 'utils/logger.util';
 import fs from 'fs';
 import { saveAsCSV } from 'libraries/csv.lib';
-import { PrismaLibrary } from 'libraries/prisma.lib';
+import { ScrapeLogger } from 'utils/logger.util';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -18,7 +17,7 @@ export const scrapeNaverKin = async () => {
   categoryArray.length = 0;
   contentArray.length = 0;
 
-  const prisma = new PrismaLibrary();
+  const prisma = new PrismaClient();
 
   try {
     ScrapeLogger.info('Naver KIN Scraping');
@@ -65,6 +64,7 @@ export const scrapeNaverKin = async () => {
 
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
       ScrapeLogger.info('Insert Data into DB');
+
       const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
 
       fs.writeFile('../../data' + Date.now() + '/file.txt', datas, (error) => {
@@ -72,9 +72,8 @@ export const scrapeNaverKin = async () => {
       });
 
       ScrapeLogger.info('Created TXT file');
-      saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
 
-      ScrapeLogger.info('Created CSV file');
+      saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
 
       await prisma.naverKin.create({
         data: {
