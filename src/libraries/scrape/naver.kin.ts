@@ -5,6 +5,7 @@ import { NaverError } from 'errors/naver.error';
 import { ScrapeLogger } from 'utils/logger.util';
 import fs from 'fs';
 import { saveAsCSV } from 'libraries/csv.lib';
+import { PrismaLibrary } from 'libraries/prisma.lib';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -17,7 +18,7 @@ export const scrapeNaverKin = async () => {
   categoryArray.length = 0;
   contentArray.length = 0;
 
-  const prisma = new PrismaClient();
+  const prisma = new PrismaLibrary();
 
   try {
     ScrapeLogger.info('Naver KIN Scraping');
