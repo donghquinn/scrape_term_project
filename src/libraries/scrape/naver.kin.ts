@@ -65,15 +65,15 @@ export const scrapeNaverKin = async () => {
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
       ScrapeLogger.info('Insert Data into DB');
 
-      const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
+      // const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
 
-      fs.writeFile('../../data' + Date.now() + '/file.txt', datas, (error) => {
-        ScrapeLogger.error('Failed to Save data into txt');
-      });
+      // fs.writeFile('../../data' + Date.now() + '/file.txt', datas, (error) => {
+      //   ScrapeLogger.error('Failed to Save data into txt');
+      // });
 
-      ScrapeLogger.info('Created TXT file');
+      // ScrapeLogger.info('Created TXT file');
 
-      saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
+      // saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
 
       await prisma.naver.create({
         data: {
@@ -102,5 +102,3 @@ export const scrapeNaverKin = async () => {
     );
   }
 };
-
-await scrapeNaverKin();
