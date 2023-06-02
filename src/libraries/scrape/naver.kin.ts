@@ -10,6 +10,11 @@ export const scrapeNaverKin = async () => {
   const categoryArray: Array<string> = [];
   const contentArray: Array<string> = [];
 
+  titleArray.length = 0;
+  hrefArray.length = 0;
+  categoryArray.length = 0;
+  contentArray.length = 0;
+
   const prisma = new PrismaClient();
 
   try {
