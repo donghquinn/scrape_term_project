@@ -1,0 +1,29 @@
+---
+version: "3.7"
+services:
+  termProject:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: termProject
+    volumes:
+      - ./logs:/home/node/logs
+    expose:
+      - 5342
+    networks:
+      - proxy
+      
+  db:
+    image: postgres:15-alpine3.17
+    ports:
+      - 10432:5432
+    restart: always
+    container_name: gptdb
+    env_file:
+      - .postgres.env
+    volumes:
+      - ./blogData:/var/lib/postgresql/data
+networks:
+  proxy:
+    external: True
+      
