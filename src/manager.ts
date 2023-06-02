@@ -14,7 +14,9 @@ export class ScrapeManager {
   }
 
   public start() {
+    Logger.info('Start manger');
     setIntervalAsync(async () => {
+      Logger.info('Start Scrape');
       try {
         await scrapeNaverKin();
       } catch (error) {
