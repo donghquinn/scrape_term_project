@@ -4,7 +4,7 @@ services:
   termproject:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     container_name: termproject
     volumes:
       - ./logs:/home/node/logs
