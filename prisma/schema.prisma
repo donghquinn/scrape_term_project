@@ -15,6 +15,7 @@ model naver{
   title String
   category String
   content String
+  image String[]
   link String
   create DateTime @default(now())
 }

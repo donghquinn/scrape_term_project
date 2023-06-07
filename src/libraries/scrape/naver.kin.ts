@@ -11,11 +11,13 @@ export const scrapeNaverKin = async () => {
   const hrefArray: Array<string> = [];
   const categoryArray: Array<string> = [];
   const contentArray: Array<string> = [];
+  const imageArray: Array<string> = [];
 
   titleArray.length = 0;
   hrefArray.length = 0;
   categoryArray.length = 0;
   contentArray.length = 0;
+  imageArray.length = 0;
 
   const prisma = new PrismaClient();
 
@@ -52,11 +54,25 @@ export const scrapeNaverKin = async () => {
 
       const response1 = await axios.get(hrefArray[i]);
 
-      const html2 = load(response1.data);
+      const html2 = load(response1.data)('div.c-heading__content');
 
-      const content = html2('div.c-heading__content').contents().text();
+      const content = html2.contents().text();
 
-      ScrapeLogger.info('Found Content');
+      html2.each((index, item) => {
+        const base2 = html(item);
+
+        const imageTags = base2.find('img');
+
+        ScrapeLogger.debug('ImageTags: %o', { imageTags: imageTags.append('!').text().split('!') });
+
+        const imageUrl = imageTags.attr('src');
+
+        ScrapeLogger.debug('Image URL : %o', { imageUrl });
+
+        if (imageUrl) {
+          imageArray.push(imageUrl);
+        }
+      });
 
       contentArray.push(content);
       //   console.log(`Content: ${hrefArray[i]}, %o`, { content });
@@ -65,22 +81,13 @@ export const scrapeNaverKin = async () => {
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
       ScrapeLogger.info('Insert Data into DB');
 
-      // const datas = `Title: ${titleArray[a]}, Category: ${categoryArray[a]}, Content: ${contentArray[a]}`;
-
-      // fs.writeFile('../../data' + Date.now() + '/file.txt', datas, (error) => {
-      //   ScrapeLogger.error('Failed to Save data into txt');
-      // });
-
-      // ScrapeLogger.info('Created TXT file');
-
-      // saveAsCSV(titleArray[a], categoryArray[a], contentArray[a]);
-
       await prisma.naver.create({
         data: {
           title: titleArray[a],
           content: contentArray[a],
           category: categoryArray[a],
           link: hrefArray[a],
+          image: imageArray[a],
         },
       });
 
