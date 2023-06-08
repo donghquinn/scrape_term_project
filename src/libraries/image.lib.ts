@@ -1,14 +1,13 @@
-import { promises as fs } from 'fs';
-import fetch from 'node-fetch';
+import axios from 'axios';
+import * as fs from 'fs';
+import { Logger } from 'utils/logger.util';
 
-export const downloadImage = async (url: string, fileName: string) => {
-  const response = await fetch(url);
+export const downLoadFile = async (title: string, imageUrl: string[]) => {
+  for (let i = 0; i <= imageUrl.length - 1; i += 1) {
+    const response = await axios.get(imageUrl[i], { responseType: 'stream' });
 
-  const blob = await response.blob();
+    fs.writeFileSync(`../files/${title}${i}`, response.data);
 
-  const arrayBuffer = await blob.arrayBuffer();
-
-  const buffer = Buffer.from(arrayBuffer);
-
-  return await fs.writeFile('../../files/' + fileName, buffer);
+    Logger.info('File Save Finished');
+  }
 };
