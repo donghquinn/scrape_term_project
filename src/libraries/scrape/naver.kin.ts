@@ -37,20 +37,20 @@ export const scrapeNaverKin = async () => {
         const base = html(item);
 
         const title = base.children('td.title').children('a').text();
-        const href = base.children('td.title').children('a').attr('href')?.split('?')[ 1 ];
+        const href = base.children('td.title').children('a').attr('href')?.split('?')[1];
         const category = base.children('td.field').children('a').text();
 
         ScrapeLogger.info('Received Data');
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${ href! }`);
+        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${href!}`);
         titleArray.push(title);
         categoryArray.push(category);
       });
 
     for (let i = 0; i < hrefArray.length - 1; i += 1) {
       const tempUrl: Array<string> = [];
-      const response1 = await axios.get<string>(hrefArray[ i ]);
+      const response1 = await axios.get<string>(hrefArray[i]);
 
       const html2 = load(response1.data);
 
@@ -80,20 +80,20 @@ export const scrapeNaverKin = async () => {
 
       await prisma.naver.create({
         data: {
-          title: titleArray[ a ],
-          content: contentArray[ a ],
-          category: categoryArray[ a ],
-          link: hrefArray[ a ],
-          image: imageArray[ a ],
+          title: titleArray[a],
+          content: contentArray[a],
+          category: categoryArray[a],
+          link: hrefArray[a],
+          image: imageArray[a],
         },
       });
 
-      ScrapeLogger.info(`Created Data finished: %o`, { title: titleArray[ a ] });
+      ScrapeLogger.info(`Created Data finished: %o`, { title: titleArray[a] });
     }
 
     ScrapeLogger.info('Finished');
 
-    return { hrefArray, titleArray, categoryArray };
+    return { hrefArray, titleArray, categoryArray, imageArray };
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
 
