@@ -59,7 +59,7 @@ export const scrapeNaverKin = async () => {
       html2('div.c-heading__content').each((index, item) => {
         const base2 = html2(item);
 
-        const imageUrl = base2.children('img').prop('src');
+        const imageUrl = base2.find('img').attr('src');
 
         if (imageUrl) {
           ScrapeLogger.info('Found Image: %o', { imageUrl });
