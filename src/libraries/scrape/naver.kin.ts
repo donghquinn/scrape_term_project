@@ -2,9 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { load } from 'cheerio';
 import { NaverError } from 'errors/naver.error';
-import fs from 'fs';
-import { saveAsCSV } from 'libraries/csv.lib';
-import { Logger, ScrapeLogger } from 'utils/logger.util';
+import { ScrapeLogger } from 'utils/logger.util';
 
 export const scrapeNaverKin = async () => {
   const titleArray: Array<string> = [];
@@ -26,7 +24,7 @@ export const scrapeNaverKin = async () => {
 
     const url = 'https://kin.naver.com/qna/list.naver';
 
-    const response = await axios.get(url);
+    const response = await axios.get<string>(url);
 
     ScrapeLogger.info('Request HTML');
 
@@ -39,38 +37,35 @@ export const scrapeNaverKin = async () => {
         const base = html(item);
 
         const title = base.children('td.title').children('a').text();
-        const href = base.children('td.title').children('a').attr('href')?.split('?')[1];
+        const href = base.children('td.title').children('a').attr('href')?.split('?')[ 1 ];
         const category = base.children('td.field').children('a').text();
 
         ScrapeLogger.info('Received Data');
 
-        hrefArray.push('https://kin.naver.com/qna/detail.naver?' + href!);
-        titleArray.push(title!);
-        categoryArray.push(category!);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${ href! }`);
+        titleArray.push(title);
+        categoryArray.push(category);
       });
 
     for (let i = 0; i < hrefArray.length - 1; i += 1) {
-      ScrapeLogger.info('Naver Content Scrape');
+      const response1 = await axios.get<string>(hrefArray[ i ]);
 
-      const response1 = await axios.get(hrefArray[i]);
+      const html2 = load(response1.data);
 
-      const html2 = load(response1.data)('div.c-heading__content');
+      const content = html2('div.c-heading__content').contents().text();
 
-      const content = html2.contents().text();
+      html2('div.c-heading__content').each((index, item) => {
+        const base2 = html2(item);
 
-      html2.each((index, item) => {
-        const base2 = html(item);
-
-        const imageTags = base2.find('img');
-
-        ScrapeLogger.debug('ImageTags: %o', { imageTags: imageTags.append('!').text().split('!') });
-
-        const imageUrl = imageTags.attr('src');
-
-        ScrapeLogger.debug('Image URL : %o', { imageUrl });
+        const imageUrl = base2.children('img').prop('src');
 
         if (imageUrl) {
+          ScrapeLogger.info('Found Image: %o', { imageUrl });
+
           imageArray.push(imageUrl);
+        } else {
+          ScrapeLogger.info('No Image Tag Found');
         }
       });
 
@@ -83,15 +78,15 @@ export const scrapeNaverKin = async () => {
 
       await prisma.naver.create({
         data: {
-          title: titleArray[a],
-          content: contentArray[a],
-          category: categoryArray[a],
-          link: hrefArray[a],
-          image: imageArray[a],
+          title: titleArray[ a ],
+          content: contentArray[ a ],
+          category: categoryArray[ a ],
+          link: hrefArray[ a ],
+          image: imageArray,
         },
       });
 
-      ScrapeLogger.info(`Created Data finished: %o`, { title: titleArray[a] });
+      ScrapeLogger.info(`Created Data finished: %o`, { title: titleArray[ a ] });
     }
 
     ScrapeLogger.info('Finished');
@@ -99,8 +94,6 @@ export const scrapeNaverKin = async () => {
     return { hrefArray, titleArray, categoryArray };
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
-
-    Logger.error(error);
 
     throw new NaverError(
       'Naver KIN Scrape',
