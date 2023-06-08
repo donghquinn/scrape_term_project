@@ -9,7 +9,7 @@ export const scrapeNaverKin = async () => {
   const hrefArray: Array<string> = [];
   const categoryArray: Array<string> = [];
   const contentArray: Array<string> = [];
-  const imageArray: Array<string> = [];
+  const imageArray: Array<string[]> = [];
 
   titleArray.length = 0;
   hrefArray.length = 0;
@@ -49,6 +49,7 @@ export const scrapeNaverKin = async () => {
       });
 
     for (let i = 0; i < hrefArray.length - 1; i += 1) {
+      const tempUrl: Array<string> = [];
       const response1 = await axios.get<string>(hrefArray[ i ]);
 
       const html2 = load(response1.data);
@@ -63,13 +64,14 @@ export const scrapeNaverKin = async () => {
         if (imageUrl) {
           ScrapeLogger.info('Found Image: %o', { imageUrl });
 
-          imageArray.push(imageUrl);
+          tempUrl.push(imageUrl);
         } else {
           ScrapeLogger.info('No Image Tag Found');
         }
       });
 
       contentArray.push(content);
+      imageArray.push(tempUrl);
       //   console.log(`Content: ${hrefArray[i]}, %o`, { content });
     }
 
@@ -82,7 +84,7 @@ export const scrapeNaverKin = async () => {
           content: contentArray[ a ],
           category: categoryArray[ a ],
           link: hrefArray[ a ],
-          image: imageArray,
+          image: imageArray[ a ],
         },
       });
 
