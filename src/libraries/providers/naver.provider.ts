@@ -61,7 +61,7 @@ export class NaverKinProvider {
 
       const csv = json2csvParser.parse(data);
 
-      fs.writeFileSync('./naver.csv', csv);
+      fs.writeFileSync('./files/naver.csv', csv);
 
       Logger.info('Saved Into CSV File');
     } catch (error) {

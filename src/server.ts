@@ -5,7 +5,7 @@ import { MainModule } from 'modules/main.module';
 import { Logger } from 'utils/logger.util';
 
 export const bootstrap = async () => {
-  const port = 5543;
+  const port = Number(process.env.APP_POPT);
   const app = await NestFactory.create<NestExpressApplication>(MainModule);
 
   app.use(helmet());
