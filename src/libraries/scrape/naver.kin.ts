@@ -76,6 +76,7 @@ export const scrapeKinList = async (url: string) => {
           .children('a')
           .text()
           .replace(/[\n\t\r]/g, '');
+
         const href = base.children('td.title').children('a').attr('href')?.split('?')[1];
         const category = base.children('td.field').children('a').text();
 

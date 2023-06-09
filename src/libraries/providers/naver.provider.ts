@@ -11,7 +11,7 @@ export class NaverKinProvider {
 
   async getCounts() {
     try {
-      const count = await this.prisma.naver.count();
+      const count = await this.prisma.naver.count({ select: { title: true } });
 
       Logger.info('Total Counts: %o', { count });
 
