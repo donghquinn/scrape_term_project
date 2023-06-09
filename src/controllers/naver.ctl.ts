@@ -27,4 +27,15 @@ export class NaverKin {
       return new SetErrorResponse(500, { error });
     }
   }
+
+  @Get('save')
+  async saveIntoCsv() {
+    try {
+      await this.naver.saveIntoCsv();
+
+      return new SetResponse(200, { result: 'Success' });
+    } catch (error) {
+      return new SetErrorResponse(500, { error });
+    }
+  }
 }

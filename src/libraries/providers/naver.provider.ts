@@ -53,7 +53,7 @@ export class NaverKinProvider {
     try {
       const data = await this.prisma.naver.findMany();
 
-      const fields = ['title', 'category', 'content', 'link', 'created'];
+      const fields = ['title', 'category', 'content', 'link', 'create'];
 
       const opts = { fields };
 
@@ -61,9 +61,15 @@ export class NaverKinProvider {
 
       const csv = json2csvParser.parse(data);
 
-      fs.writeFileSync('../../../naver.csv', csv);
+      fs.writeFileSync('./naver.csv', csv);
 
       Logger.info('Saved Into CSV File');
-    } catch (error) {}
+    } catch (error) {
+      throw new NaverError(
+        'Naver Provider',
+        'Failed to Save into Csv File',
+        error instanceof Error ? error : new Error(JSON.stringify(error)),
+      );
+    }
   }
 }

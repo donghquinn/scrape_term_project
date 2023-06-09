@@ -30,6 +30,6 @@ export class ScrapeManager {
       } catch (error) {
         Logger.error('Scrape Error: %o', { error });
       }
-    }, this.time);
+    }, 60000);
   }
 }
