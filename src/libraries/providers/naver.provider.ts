@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { NaverError } from 'errors/naver.error';
 import { PrismaService } from 'libraries/prisma.lib';
+import { Parser } from 'json2csv';
 import { Logger } from 'utils/logger.util';
+import fs from 'fs';
 
 @Injectable()
 export class NaverKinProvider {
@@ -45,5 +47,23 @@ export class NaverKinProvider {
         error instanceof Error ? error : new Error(JSON.stringify(error)),
       );
     }
+  }
+
+  async saveIntoCsv() {
+    try {
+      const data = await this.prisma.naver.findMany();
+
+      const fields = ['title', 'category', 'content', 'link', 'created'];
+
+      const opts = { fields };
+
+      const json2csvParser = new Parser(opts);
+
+      const csv = json2csvParser.parse(data);
+
+      fs.writeFileSync('../../../naver.csv', csv);
+
+      Logger.info('Saved Into CSV File');
+    } catch (error) {}
   }
 }
