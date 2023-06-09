@@ -19,5 +19,5 @@ logs
 #.pnp.*
 
 .postgres.env
-
+*.csv
 files
