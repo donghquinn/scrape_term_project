@@ -1,4 +1,4 @@
-import('./env');
+import './env';
 
 import { ScrapeManager } from 'manager';
 import { bootstrap } from 'server';
