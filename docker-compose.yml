@@ -9,8 +9,10 @@ services:
     volumes:
       - ./logs:/home/node/logs
       - ./csv:/home/node/files
+    env_file:
+      - .env
     expose:
-      - 5432
+      - 5342
     restart: unless-stopped
     networks:
       - proxy
