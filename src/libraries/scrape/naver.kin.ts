@@ -25,7 +25,7 @@ export const scrapeNaverKin = async () => {
     }
 
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
-      await prisma.naver.create({
+      await prisma.naverKin.create({
         data: {
           title: titleArray[a],
           content: contentArray[a],

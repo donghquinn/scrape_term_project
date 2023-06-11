@@ -11,11 +11,11 @@ export class NaverKinProvider {
 
   async getCounts() {
     try {
-      const count = await this.prisma.naver.count({ select: { uuid: true } });
+      const count = await this.prisma.naverKin.count({ select: { uuid: true } });
 
       Logger.info('Total Counts: %o', { count });
 
-      return count;
+      return count.uuid;
     } catch (error) {
       throw new NaverError(
         'Naver Provider',
@@ -27,7 +27,7 @@ export class NaverKinProvider {
 
   async getCategoryCounts() {
     try {
-      const categoriesCount = await this.prisma.naver.groupBy({
+      const categoriesCount = await this.prisma.naverKin.groupBy({
         by: ['category'],
         _count: {
           category: true,
@@ -51,7 +51,7 @@ export class NaverKinProvider {
 
   async saveIntoCsv() {
     try {
-      const data = await this.prisma.naver.findMany();
+      const data = await this.prisma.naverKin.findMany();
 
       const fields = ['title', 'category', 'content', 'link', 'create'];
 

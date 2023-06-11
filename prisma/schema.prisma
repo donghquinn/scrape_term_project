@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model naver{
+model naverKin{
   uuid String @id @default(uuid())
   title String
   category String
