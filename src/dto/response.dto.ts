@@ -9,8 +9,11 @@ export class SetResponse implements ResponseBody {
     this.dataRes = data ?? null;
     this.errMsg = [];
   }
+
   resCode: string;
+
   dataRes: KeyableObject | null;
+
   errMsg: string[];
 }
 
@@ -34,6 +37,8 @@ export class SetErrorResponse implements ResponseBody {
   }
 
   resCode: string;
+
   dataRes: null;
+
   errMsg: string[];
 }

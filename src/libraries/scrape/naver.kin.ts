@@ -4,40 +4,17 @@ import { NaverError } from 'errors/naver.error';
 import { PrismaService } from 'libraries/prisma.lib';
 import { ScrapeLogger } from 'utils/logger.util';
 
-export const scrapeNaverKin = async () => {
-  const contentArray: Array<string> = [];
-
-  contentArray.length = 0;
-
-  const prisma = new PrismaService();
-
+export const scrapeContent = async (url: string) => {
   try {
-    ScrapeLogger.info('Naver KIN Scraping');
+    const response1 = await axios.get<string>(url);
 
-    const url = 'https://kin.naver.com/qna/list.naver';
+    const html2 = load(response1.data);
 
-    const { titleArray, hrefArray, categoryArray } = await scrapeKinList(url);
+    let content = html2('div.c-heading__content').contents().text();
 
-    for (let i = 0; i < hrefArray.length - 1; i += 1) {
-      const content = await scrapeContent(hrefArray[i]);
+    content = content.replace(/[\n\t\r]/g, '');
 
-      contentArray.push(content);
-    }
-
-    for (let a = 0; a <= contentArray.length - 1; a += 1) {
-      await prisma.naverKin.create({
-        data: {
-          title: titleArray[a],
-          content: contentArray[a],
-          category: categoryArray[a],
-          link: hrefArray[a],
-        },
-      });
-    }
-
-    ScrapeLogger.info('Finished');
-
-    return { hrefArray, titleArray, categoryArray };
+    return content;
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
 
@@ -77,11 +54,11 @@ export const scrapeKinList = async (url: string) => {
           .text()
           .replace(/[\n\t\r]/g, '');
 
-        const href = base.children('td.title').children('a').attr('href')?.split('?')[1];
+        const href = base.children('td.title').children('a').attr('href')?.split('?')[ 1 ];
         const category = base.children('td.field').children('a').text();
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${href!}`);
+        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${ href! }`);
         titleArray.push(title);
         categoryArray.push(category);
       });
@@ -98,17 +75,42 @@ export const scrapeKinList = async (url: string) => {
   }
 };
 
-export const scrapeContent = async (url: string) => {
+
+
+export const scrapeNaverKin = async () => {
+  const contentArray: Array<string> = [];
+
+  contentArray.length = 0;
+
+  const prisma = new PrismaService();
+
   try {
-    const response1 = await axios.get<string>(url);
+    ScrapeLogger.info('Naver KIN Scraping');
 
-    const html2 = load(response1.data);
+    const url = 'https://kin.naver.com/qna/list.naver';
 
-    let content = html2('div.c-heading__content').contents().text();
+    const { titleArray, hrefArray, categoryArray } = await scrapeKinList(url);
 
-    content = content.replace(/[\n\t\r]/g, '');
+    for (let i = 0; i < hrefArray.length - 1; i += 1) {
+      const content = await scrapeContent(hrefArray[ i ]);
 
-    return content;
+      contentArray.push(content);
+    }
+
+    for (let a = 0; a <= contentArray.length - 1; a += 1) {
+      await prisma.naverKin.create({
+        data: {
+          title: titleArray[ a ],
+          content: contentArray[ a ],
+          category: categoryArray[ a ],
+          link: hrefArray[ a ],
+        },
+      });
+    }
+
+    ScrapeLogger.info('Finished');
+
+    return { hrefArray, titleArray, categoryArray };
   } catch (error) {
     ScrapeLogger.error('Error: %o', { error: error instanceof Error ? error : new Error(JSON.stringify(error)) });
 
@@ -119,3 +121,4 @@ export const scrapeContent = async (url: string) => {
     );
   }
 };
+

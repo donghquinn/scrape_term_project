@@ -1,3 +1,5 @@
+import('./env');
+
 import { scrapeNaverKin } from 'libraries/scrape/naver.kin';
 import { setIntervalAsync } from 'set-interval-async';
 import { Logger } from 'utils/logger.util';
@@ -8,6 +10,7 @@ export class ScrapeManager {
   private time: number;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.time = Number(process.env.INTERVAL!);
   }
 

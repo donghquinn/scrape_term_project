@@ -4,7 +4,7 @@ import { NaverKinProvider } from 'libraries/providers/naver.provider';
 
 @Controller('naver')
 export class NaverKin {
-  constructor(private readonly naver: NaverKinProvider) {}
+  constructor(private readonly naver: NaverKinProvider) { }
 
   @Get('categories')
   async getCategoriesCount() {
@@ -20,7 +20,7 @@ export class NaverKin {
   @Get('count')
   async getCount() {
     try {
-      const count = this.naver.getCounts();
+      const count = await this.naver.getCounts();
 
       return new SetResponse(200, { count });
     } catch (error) {
