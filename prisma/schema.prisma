@@ -10,12 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model naverKin{
+model naverKin {
   uuid String @id @default(uuid())
   title String
   category String
   content String
-  image String[]
   link String
   create DateTime @default(now())
 }

@@ -64,6 +64,8 @@ export class NaverKinProvider {
       fs.writeFileSync('./files/naver.csv', csv);
 
       Logger.info('Saved Into CSV File');
+
+      return 'Saved into csv File';
     } catch (error) {
       throw new NaverError(
         'Naver Provider',

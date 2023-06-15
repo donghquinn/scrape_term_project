@@ -48,17 +48,21 @@ export const scrapeKinList = async (url: string) => {
       .each((index, item) => {
         const base = html(item);
 
+        // 정규식을 통해 Escape Sequence 제거
         const title = base
           .children('td.title')
           .children('a')
           .text()
           .replace(/[\n\t\r]/g, '');
 
-        const href = base.children('td.title').children('a').attr('href')?.split('?')[ 1 ];
+        // 링크
+        const href = base.children('td.title').children('a').attr('href')?.split('?')[1];
+
+        // 카테고리
         const category = base.children('td.field').children('a').text();
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${ href! }`);
+        hrefArray.push(`https://kin.naver.com/qna/detail.naver?${href!}`);
         titleArray.push(title);
         categoryArray.push(category);
       });
@@ -75,8 +79,6 @@ export const scrapeKinList = async (url: string) => {
   }
 };
 
-
-
 export const scrapeNaverKin = async () => {
   const contentArray: Array<string> = [];
 
@@ -89,21 +91,24 @@ export const scrapeNaverKin = async () => {
 
     const url = 'https://kin.naver.com/qna/list.naver';
 
+    // 스크레이핑한 제목, 링크, 분야를 리턴
     const { titleArray, hrefArray, categoryArray } = await scrapeKinList(url);
 
+    // 가져온 링크 하나하나 접속해서 본문 긁어오기
     for (let i = 0; i < hrefArray.length - 1; i += 1) {
-      const content = await scrapeContent(hrefArray[ i ]);
+      const content = await scrapeContent(hrefArray[i]);
 
       contentArray.push(content);
     }
 
+    // DB 업데이트
     for (let a = 0; a <= contentArray.length - 1; a += 1) {
       await prisma.naverKin.create({
         data: {
-          title: titleArray[ a ],
-          content: contentArray[ a ],
-          category: categoryArray[ a ],
-          link: hrefArray[ a ],
+          title: titleArray[a],
+          content: contentArray[a],
+          category: categoryArray[a],
+          link: hrefArray[a],
         },
       });
     }
@@ -121,4 +126,3 @@ export const scrapeNaverKin = async () => {
     );
   }
 };
-
