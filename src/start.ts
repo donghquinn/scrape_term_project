@@ -1,8 +1,8 @@
-import { ScrapeManager } from 'manager';
+// import { ScrapeManager } from 'manager';
 import { bootstrap } from 'server';
 
-const manager = new ScrapeManager();
+// const manager = new ScrapeManager();
 
-manager.start();
+// manager.start();
 
 await bootstrap();
