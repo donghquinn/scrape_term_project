@@ -5,8 +5,10 @@ import { MainModule } from 'modules/main.module';
 import { Logger } from 'utils/logger.util';
 
 export const bootstrap = async () => {
-  const port = 5543;
-  const app = await NestFactory.create<NestExpressApplication>(MainModule);
+  const port = Number(process.env.APP_PORT);
+  const app = await NestFactory.create<NestExpressApplication>(MainModule, {
+    logger: [ 'log', 'debug', 'warn', 'error' ],
+  });
 
   app.use(helmet());
   app.set('trust proxy', 1);
@@ -14,12 +16,12 @@ export const bootstrap = async () => {
   app.useBodyParser('json');
   app.enableCors();
 
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port, '0.0.0.0', () => {
+    const message = 'Server Started';
+    const wrapper = '@'.repeat(message.length);
 
-  const message = 'Server Started';
-  const wrapper = '@'.repeat(message.length);
-
-  Logger.info(wrapper);
-  Logger.info(message);
-  Logger.info(wrapper);
+    Logger.info(wrapper);
+    Logger.info(message);
+    Logger.info(wrapper);
+  });
 };
